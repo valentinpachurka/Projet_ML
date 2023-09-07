@@ -1,0 +1,66 @@
+{
+    "Régression Linéaire": {
+        "Avantages": ["Facile à comprendre et à implémenter", "Modélise la relation linéaire entre les variables d'entrée et la cible."],
+        "Inconvénients": ["Ne gère pas bien les relations complexes", "Nécessite un réglage de l'hyperparamètre alpha (régularisation)."]
+    },
+    "Régression Ridge": {
+        "Avantages": ["Réduit les effets des outliers et améliore la généralisation", "Modélise de manière stable en réduisant l'overfitting."],
+        "Inconvénients": ["Ne gère pas bien la sélection des variables", "Nécessite un réglage de l'hyperparamètre alpha (régularisation)."]
+    },
+    "Régression Lasso": {
+        "Avantages": ["Sélection automatique des variables", "Élimine des features."],
+        "Inconvénients": ["Instable avec des corrélations élevées et sensible aux outliers", "Nécessite un réglage de l'hyperparamètre alpha (régularisation)."]
+    },
+    "Régression ElasticNet": {
+        "Avantages": ["Gère les problèmes de corrélation et de multicolinéarité", "Contrôle et flexibilité entre Lasso et Ridge."],
+        "Inconvénients": ["Complexité accrue et choix des valeurs d'hyperparamètres importants", "Nécessite un réglage de l'alpha (régularisation) et du L1_ratio."]
+    },
+    "Régression Logistique": {
+        "Avantages": ["Bon pour la classification binaire", "Modélise la probabilité d'appartenance à une classe en utilisant la fonction logistique."],
+        "Inconvénients": ["Ne fonctionne pas bien avec des données non linéaires", "Nécessite un réglage du taux d'apprentissage et de la régularisation."]
+    },
+    "Arbres de Décision": {
+        "Avantages": ["Interprétables, gère bien les non-linéarités", "Possibilité de limiter la profondeur de l'arbre."],
+        "Inconvénients": ["Tendance à overfitter avec des arbres profonds", "Sensible aux données bruitées."]
+    },
+    "Forêts aléatoires": {
+        "Avantages": ["Réduit le surapprentissage, performances élevées", "Agrège les prédictions de plusieurs arbres de décision."],
+        "Inconvénients": ["Moins interprétables que les arbres simples", "Nécessite de régler le nombre d'arbres, la profondeur et le critère de division."]
+    },
+    "SVM (Support Vector Machines)": {
+        "Avantages": ["Bon pour les données non linéaires, efficace avec peu de données", "Trouve l'hyperplan qui maximise la marge entre les classes."],
+        "Inconvénients": ["Sensible au choix du noyau et des hyperparamètres", "Nécessite de régler le paramètre de régularisation C et le type de noyau."]
+    },
+    "k-Means": {
+        "Avantages": ["Simple et rapide, efficace pour la clustering", "Regroupe les données en clusters en minimisant la distance entre les points et le centre de leur cluster."],
+        "Inconvénients": ["Sensible au nombre de clusters initial", "Nécessite de régler le nombre de clusters et le critère d'affectation."]
+    },
+    "Réseau de Neurones": {
+        "Avantages": ["Performances élevées pour des tâches complexes", "Modèle basé sur le cerveau humain, composé de couches de neurones interconnectés."],
+        "Inconvénients": ["Besoin d'une grande quantité de données", "Nécessite de régler l'architecture (nombre de couches, neurones, fonctions d'activation)."]
+    },
+    "Naïve Bayes": {
+        "Avantages": ["Efficace avec peu de données, interprétable", "Utilise le théorème de Bayes pour prédire la probabilité d'appartenance à une classe."],
+        "Inconvénients": ["Supposition d'indépendance des caractéristiques", "Peut nécessiter un lissage optionnel."]
+    },
+    "Gradient Boosting": {
+        "Avantages": ["Performances élevées, gère bien les données bruitées", "Construit un modèle en agrégeant séquentiellement des modèles plus simples."],
+        "Inconvénients": ["Sensible à l'overfitting, temps d'entraînement élevé", "Nécessite de régler le taux d'apprentissage, la profondeur et le nombre d'estimateurs."]
+    },
+    "PCA (Principal Component Analysis)": {
+        "Avantages": ["Réduit la dimensionnalité, facilite la visualisation", "Transforme les données en un nouvel espace en identifiant les axes principaux de variabilité."],
+        "Inconvénients": ["Perte d'interprétabilité des caractéristiques", "Nécessite de régler le nombre de composantes principales."]
+    },
+    "LDA (Linear Discriminant Analysis)": {
+        "Avantages": ["Bon pour la classification multiclasse", "Réduit la dimension tout en maximisant la séparabilité entre les classes."],
+        "Inconvénients": ["Sensible à l'échelle des données", "Nécessite de régler le nombre de composantes discriminantes."]
+    },
+    "Réseaux de Neurones Convolutifs (CNN)": {
+        "Avantages": ["Performances élevées pour la vision par ordinateur", "Conçus pour traiter des données structurées en grille telles que les images."],
+        "Inconvénients": ["Besoin de beaucoup de données, temps d'entraînement élevé", "Nécessite de régler l'architecture (couches convolutives, de pooling, etc.)."]
+    },
+    "XGBoost": {
+        "Avantages": ["Hautes performances, régularisation intégrée", "Version optimisée du gradient boosting avec des améliorations spécifiques."],
+        "Inconvénients": ["Nécessite le réglage des hyperparamètres", "Nécessite de régler le taux d'apprentissage, la profondeur et le nombre d'estimateurs."]
+    }
+}

@@ -4,7 +4,7 @@ import sqlalchemy
 import pandas as pd
 from preprocessing import DataPreprocessor
 from modeles import Modelisation, DictModels
-from ref_texte import Dictext
+from info_text import get_model_advantages_disadvantages, get_metrics_info
 
 
 class MachineLearningApp:
@@ -15,13 +15,12 @@ class MachineLearningApp:
         self.selected_model = None
 
     def connection_db(self):
-        host = "ec2-34-247-94-62.eu-west-1.compute.amazonaws.com"
-        database = "d4on6t2qk9dj5a"
-        user = "nxebpjsgxecqny"
+        host = "ec2-34-247-16-250.eu-west-1.compute.amazonaws.com"
+        database = "d1fqoktf0gl90p"
+        user = "xpfxvuvcndvbve"
         port = 5432
-        password = "1da2f1f48e4a37bf64e3344fe7670a6547c169472263b62d042a01a8d08d2114"
-        URI = "postgresql://nxebpjsgxecqny:1da2f1f48e4a37bf64e3344fe7670a6547c169472263b62d042a01a8d08d2114@ec2-34-247-94" \
-              "-62.eu-west-1.compute.amazonaws.com:5432/d4on6t2qk9dj5a"
+        password = "43b5e0de771549a5cb3117f84603628575b85328a0aecd350b017dcbf4534ddb"
+        URI = "postgresql://xpfxvuvcndvbve:43b5e0de771549a5cb3117f84603628575b85328a0aecd350b017dcbf4534ddb@ec2-34-247-16-250.eu-west-1.compute.amazonaws.com:5432/d1fqoktf0gl90p"
         engine = sqlalchemy.create_engine(URI)
         table_list = []
 
@@ -77,9 +76,10 @@ class MachineLearningApp:
                 self.selected_model = st.sidebar.selectbox("Choix du modèle",
                                                       list(DictModels.get_classifiers_dict()["algorithme"].keys()))
             try:
-                advantages, disadvantages = Dictext.print_algorithm_advantages_disadvantages(self.selected_model)
-                st.sidebar.info(advantages)
-                st.sidebar.info(disadvantages)
+                json_filename = "info_model.json"
+                advantages, disadvantages = get_model_advantages_disadvantages(json_filename, self.selected_model)
+                st.sidebar.info("".join(advantages))
+                st.sidebar.info("".join(disadvantages))
             except Exception:
                 st.sidebar.error(
                     f"Pour le moment, nous ne pouvons fournir \nles avantages et inconvenients du modèle {self.selected_model}")
@@ -137,6 +137,7 @@ class MachineLearningApp:
         is_auto = st.sidebar.toggle("Recherche automatique ?", value=True)
         try:
             model = Modelisation(selected_model, X_train, X_test, y_train, y_test, use_pca, is_auto)
+            st.title("Evaluation du Modèle")
             if model_type == "Régression":
                 st.subheader("Résultat du Modèle :")
                 kfold = st.sidebar.number_input("Choix du kfold (validation croisée) :", min_value=5,
@@ -167,11 +168,11 @@ class MachineLearningApp:
                     except Exception as e:
                         st.error(f"Erreur lors de la modélisation (manuelle): " + str(e))
 
-                st.title("Evaluation du Modèle")
                 metrics_to_display = ["reg_metrics", "regression_plot", "regression_coefficient_hist",
                                       "courbe_apprentissage"]
                 for metric in metrics_to_display:
                     if metric == "reg_metrics":
+                        json_filename = "info_metrics.json"
                         r2, rmse, mae, score_train, score_test = model.reg_metrics(is_auto)
                         data = {
                             'Métrique': ['R²', 'RMSE', 'MAE'],
@@ -180,21 +181,21 @@ class MachineLearningApp:
                         df_metrics = pd.DataFrame(data)
                         st.write("Métriques de performance :")
                         st.data_editor(df_metrics, hide_index=True)
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         accuracy = {
-                            'Métrique': ['Score train', 'Score test'],
-                            'Score': [(score_train), (score_test)]
+                            "Echantillon d'entraînement": ['Train', 'Test'],
+                            'Score MSE': [(score_train), (score_test)]
                         }
                         st.write(metric_info)
                         df_accuracy = pd.DataFrame(accuracy)
                         st.write("Score de train et de test:")
                         st.data_editor(df_accuracy, hide_index=True)
                     elif metric == "regression_plot":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         st.plotly_chart(model.regression_plot())
                         st.write(metric_info)
                     elif metric == "regression_coefficient_hist":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         try:
                             st.plotly_chart(model.regression_coefficient_hist(selected_model, is_auto))
                             st.write(metric_info)
@@ -202,7 +203,7 @@ class MachineLearningApp:
                             st.warning(
                                 f"Cette évaluation de modèle n'a pas d'intérêt pour ce modèle: {selected_model}.")
                     elif metric == "courbe_apprentissage":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         st.plotly_chart(model.courbe_apprentissage(model_type, is_auto))
                         st.write(metric_info)
 
@@ -233,29 +234,28 @@ class MachineLearningApp:
                     except Exception as e:
                         st.error(f"Erreur lors de la récupération des paramètres: " + str(e))
                     try:
-                        model.regressor(dict_params, kfold)
+                        model.classifier(dict_params, kfold)
                     except Exception as e:
                         st.error(f"Erreur lors de la modélisation (manuelle): " + str(e))
 
-                st.title("Evaluation du Modèle")
-
                 metrics_to_display = ["matrix_confusion", "report_classif", "roc_auc", "courbe_apprentissage"]
+                json_filename = "info_metrics.json"
                 for metric in metrics_to_display:
                     if metric == "matrix_confusion":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         st.plotly_chart(model.matrix_confusion())
                         st.write(metric_info)
                     elif metric == "report_classif":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         st.write("**Rapport de classification**")
                         st.write(model.report_classif())
                         st.write(metric_info)
                     elif metric == "roc_auc":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         st.plotly_chart(model.roc_auc(selected_model, is_auto))
                         st.write(metric_info)
                     elif metric == "courbe_apprentissage":
-                        metric_info = Dictext.print_metrics_info([metric])
+                        metric_info = get_metrics_info(json_filename, metric)
                         st.plotly_chart(model.courbe_apprentissage(model_type, is_auto))
                         st.write(metric_info)
 

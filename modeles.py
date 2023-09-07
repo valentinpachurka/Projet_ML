@@ -49,12 +49,12 @@ class DictModels:
                 "Arbres de Décision": {
                     "DecisionTreeClassifier()": {'max_depth': [2, 3, 5, 10, 20],
                                                 'min_samples_leaf': [5, 10, 20, 50, 100],
-                                                 'criterion': ['poisson', 'squared_error', 'friedman_mse', 'absolute_error'],
-                                                 'max_features': ["sqrt", "log2"]}
+                                                'criterion': ['gini', 'entropy', 'log_loss'],
+                                                'max_features': ["sqrt", "log2"]}
                 },
                 "Forêts aléatoires": {
                     "RandomForestClassifier()": {"n_estimators": [10, 100, 1000],
-                                                 'criterion': ['poisson', 'squared_error', 'friedman_mse', 'absolute_error'],
+                                                 'criterion':['gini', 'entropy', 'log_loss'],
                                                  "max_features": ['sqrt', 'log2', None]}
                 },
                 "SVM (Support Vector Machines)": {
@@ -205,6 +205,7 @@ class Modelisation:
         self.model_manu.fit(self.X_train, self.y_train)
         self.y_pred_train = self.model_manu.predict(self.X_test)
         self.y_pred_test = self.model_manu.predict(self.X_test)
+        st.write(f"Modèles : {self.model}")
         st.write(f"**Précision sur la validation croisée:**\t{scores.mean()} sur {kfold} folds")
         return scores
 
@@ -253,6 +254,7 @@ class Modelisation:
         self.reg = self.model_manu.fit(self.X_train, self.y_train)
         self.y_pred_train = self.model_manu.predict(self.X_test)
         self.y_pred_test = self.model_manu.predict(self.X_test)
+        st.write(f"Modèles : {self.model}")
         st.write(f"**Précision sur la validation croisée:**\t{scores.mean()} sur {kfold} folds")
         return scores
 
